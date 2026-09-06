@@ -35,8 +35,15 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 dir('app') {
-                    withSonarQubeEnv('SonarQube-Server') {
-                        sh 'mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:5.2.0.4988:sonar -Dsonar.projectKey=assign2 -Dsonar.projectName=Assign2'
+                    withEnv([
+                        'JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64',
+                        'PATH+JAVA=/usr/lib/jvm/java-21-openjdk-amd64/bin'
+                    ]) {
+                        withSonarQubeEnv('SonarQube-Server') {
+                            sh 'java -version'
+                            sh 'mvn -version'
+                            sh 'mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:5.2.0.4988:sonar -Dsonar.projectKey=assign2 -Dsonar.projectName=Assign2'
+                        }
                     }
                 }
             }
