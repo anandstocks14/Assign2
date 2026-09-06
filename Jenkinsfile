@@ -37,7 +37,8 @@ pipeline {
                 dir('app') {
                     withSonarQubeEnv('SonarQube-Server') {
                         sh '''
-                            mvn clean verify sonar:sonar \
+                            mvn clean verify sonar \
+			    org.sonarsource.scanner.maven:sonar-maven-plugin:5.2.0.4988:sonar \
                             -Dsonar.projectKey=assign2 \
                             -Dsonar.projectName=Assign2
                         '''
