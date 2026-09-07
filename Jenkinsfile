@@ -66,5 +66,35 @@ pipeline {
                 }
             }
         }
+
+        stage('Approval') {
+            steps {
+                script {
+                    def approval = input(
+                        message: 'Do you want to continue with the build?',
+                        parameters: [
+                            choice(
+                                name: 'APPROVAL',
+                                choices: ['Yes', 'No']
+                            )
+                        ]
+                    )
+
+                    if (approval == 'No') {
+                        error "Approval rejected. Pipeline failed."
+                    }
+
+                    echo "Approval granted."
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('app') {
+                    sh 'mvn package -DskipTests'
+                }
+            }
+        }
     }
 }
