@@ -96,5 +96,40 @@ pipeline {
                 }
             }
         }
+
+        stage('Upload Artifact to Nexus') {
+            steps {
+                dir('app') {
+                    withCredentials([
+                        usernamePassword(
+                            credentialsId: 'nexus-credentials',
+                            usernameVariable: 'NEXUS_USER',
+                            passwordVariable: 'NEXUS_PASSWORD'
+                        )
+                    ]) {
+                        sh '''
+                            set +x
+                            trap 'rm -f nexus-settings.xml' EXIT
+
+                            {
+                                printf '%s\\n' '<settings>'
+                                printf '%s\\n' '  <servers>'
+                                printf '%s\\n' '    <server>'
+                                printf '%s\\n' '      <id>nexus-releases</id>'
+                                printf '      <username>%s</username>\\n' "$NEXUS_USER"
+                                printf '      <password>%s</password>\\n' "$NEXUS_PASSWORD"
+                                printf '%s\\n' '    </server>'
+                                printf '%s\\n' '  </servers>'
+                                printf '%s\\n' '</settings>'
+                            } > nexus-settings.xml
+
+                            mvn deploy \
+                                -DskipTests \
+                                -s nexus-settings.xml
+                        '''
+                    }
+                }
+            }
+        }
     }
 }
