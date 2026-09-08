@@ -10,10 +10,22 @@
     <version>1.0</version>
 
     <properties>
-        <maven.compiler.release>17</maven.compiler.release>
+        <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.coverage.jacoco.xmlReportPath>
+            target/site/jacoco/jacoco.xml
+        </sonar.coverage.jacoco.xmlReportPath>
     </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <name>Nexus Release Repository</name>
+            <url>
+                http://172.31.9.63:8081/repository/maven-releases/
+            </url>
+        </repository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
@@ -52,7 +64,7 @@
                     </execution>
 
                     <execution>
-                        <id>coverage-report</id>
+                        <id>report</id>
                         <phase>verify</phase>
                         <goals>
                             <goal>report</goal>
